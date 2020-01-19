@@ -1,23 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ls.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/18 19:41:24 by vilee             #+#    #+#             */
+/*   Updated: 2020/01/19 01:39:05 by vilee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
-void	ls_simple(int *flags, t_lsnode *root)
+int			main(int ac, char **av)
 {
-	if (root == NULL)
-		return ;
-	if (root->left)
-		ls_simple(flags, root->left);
-	if (root->name[0] != '.' || flags['a'])
+	int		flags[128];
+	int		arg;
+
+	if (ac >= 1)
 	{
-		if (flags['l'])
-		{
-			// printf("root = %p \t", &root);
-			print_long(root, flags);
-		}
+		arg = ls_setflag(ac, flags, av);
+		ls_checkdir(ac, arg - 1, av);
+		arg--;
+		if (ac - 1 == arg)
+			ft_ls(flags, ".");
 		else
-			printf("%-25s", root->name);
+			while (++arg < ac)
+				ft_ls(flags, av[arg]);
 	}
-	if (root->right)
-		ls_simple(flags, root->right);
+	return (0);
 }
 
 static void	ls_bigr2(int *flags, t_lsnode *root)
@@ -27,7 +38,8 @@ static void	ls_bigr2(int *flags, t_lsnode *root)
 	if (root->left)
 		ls_bigr2(flags, root->left);
 	if (root->name[0] != '.' || flags['a'])
-		ft_ls2(flags, root->name);
+		if (ft_strcmp(root->name, ".") && ft_strcmp(root->name, ".."))
+			ft_ls(flags, root->name);
 	if (root->right)
 		ls_bigr2(flags, root->right);
 }
@@ -37,18 +49,16 @@ void		ft_lsbigr(int *flags, char *av)
 	struct dirent	*de;
 	DIR				*dr;
 	t_lsnode		*root;
+	t_lsnode		*insert;
 
-	// printf("\n1\n");
 	root = NULL;
 	dr = opendir(av);
 	if (dr != NULL)
 	{
 		while ((de = readdir(dr)) != NULL)
 		{
-			if (flags['t'])
-				ls_inserttime1(flags, (de->d_name), &root);
-			else
-				ls_insertnode(flags, (de->d_name), &root);
+			insert = ls_createnode(de->d_name, av);
+			ls_insertnode(&root, insert);
 		}
 		ls_bigr2(flags, root);
 		ls_freetree(root);
@@ -56,11 +66,13 @@ void		ft_lsbigr(int *flags, char *av)
 	}
 }
 
-void 	ft_ls2(int *flags, char *av)
+void 	ft_ls(int *flags, char *av)
 {
 	struct dirent	*de;
 	DIR				*dr;
 	t_lsnode		*root;
+	t_lsnode		*insert;
+	char			*tmp;
 
 	root = NULL;
 	dr = opendir(av);
@@ -68,50 +80,18 @@ void 	ft_ls2(int *flags, char *av)
 	{
 		while ((de = readdir(dr)) != NULL)
 		{
-		// use my dispatch table here later
-			if (flags['t'])
-				ls_inserttime1(flags, (de->d_name), &root);
-			else
-				ls_insertnode(flags, (de->d_name), &root);
+			insert = ls_createnode(de->d_name, av);
+			ls_insertnode(&root, insert);
 		}
-		ls_simple(flags, root);	// needs modifying here too
+		g_flags.ls_traverse(flags, root);
 		ls_freetree(root);
 		if (flags['R'])
 		{
-			printf("\n%s: \n", av);
+			printf("\n%s: \ntotal %d", tmp = build_path(0, av)54	);
 			ft_lsbigr(flags, av);
 			printf("\n\n");
+			free(tmp);
 		}
 		closedir(dr);
 	}
-}
-
-void	ft_ls(int ac, int arg, int *flags, char **av)
-{
-	if (ac - 1 == arg)
-	{
-		ft_ls2(flags, ".");
-		exit (1);
-	}
-	else
-	{
-		while (++arg < ac)
-		{
-			ft_ls2(flags, av[arg]);
-		}
-	}
-}
-
-int			main(int ac, char **av)
-{
-	int		flags[128];
-	int		arg;
-
-	if (ac >= 1)
-	{
-		arg = ls_checkflag(ac, flags, av);
-		ls_checkdir(ac, arg - 1, flags, av);
-		ft_ls(ac, arg - 1, flags, av);
-	}
-	return (0);
 }

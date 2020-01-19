@@ -1,31 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ls_readpath.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/10 16:13:19 by vilee             #+#    #+#             */
-/*   Updated: 2019/12/08 20:38:07 by vilee            ###   ########.fr       */
+/*   Created: 2020/01/17 16:39:36 by vilee             #+#    #+#             */
+/*   Updated: 2020/01/18 21:26:37 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_ls.h"
 
-int		ft_atoi(const char *str)
+char	*build_path(char *s, char *old_path)
 {
-	int i;
-	int num;
-	int neg;
+	char	*tmp;
+	char	*new;
 
-	i = 0;
-	num = 0;
-	neg = 1;
-	while (str[i] && ft_isspace(str[i]))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-		(str[i++] == '-') ? (neg = -1) : 0;
-	while (str[i] >= '0' && str[i] <= '9')
-		num = num * 10 + str[i++] - '0';
-	return (num * neg);
+	if (!s)
+	{
+		if (old_path[0] == '~' || old_path[0] == '/' || old_path[0] == '.')
+			return (ft_strdup(old_path));
+		return (ft_strjoin("./", old_path));
+	}
+	tmp = ft_strjoin(old_path, "/");
+	new = ft_strjoin(tmp, s);
+	free(tmp);
+	return (new);
 }

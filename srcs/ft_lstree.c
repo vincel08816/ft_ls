@@ -1,57 +1,51 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_lstree.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/01/18 19:41:10 by vilee             #+#    #+#             */
+/*   Updated: 2020/01/19 01:15:19 by vilee            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
-t_lsnode	*ls_createnode(char *tmp)
+/*	tree functions */
+
+t_lsnode	*ls_createnode(char *tmp, char *path)
 {
 	t_lsnode *new;
 
-	printf("%s\n", tmp);
 	new = NULL;
 	if (!(new = (t_lsnode*)malloc(sizeof(t_lsnode))))
-		exit (1);
+		return (NULL);
 	new->name = tmp;
-	if (!(new->stat = (struct stat*)malloc(sizeof(struct stat))))
-		exit (1);
-	lstat(tmp, (new->stat));
-	new->path = 0;
-	new->full_path = 0;
+	new->path = path;
+	new->full_path = build_path(tmp, path);
+	if ((lstat(new->full_path, &(new->stat)) == -1))
+	{
+		ft_putstr("fuck lstat T_T");
+		return (0);
+	}
 	new->is_dir = 0;
 	new->left = 0;
 	new->right = 0;
 	return (new);
 }
 
-void	ls_insertnode(int *flags, char *tmp, t_lsnode **root)
+void	ls_insertnode(t_lsnode **root, t_lsnode *insert)
 {
 	if (*root == NULL)
 	{
-		*root = ls_createnode(tmp);
+		*root = insert;
 		return ;
 	}
-	if (ft_strcmp((*root)->name, tmp) < 0)
-		ls_insertnode(flags, tmp, &((*root)->right));
-	else
-		ls_insertnode(flags, tmp, &((*root)->left));
-}
-
-static void	ls_inserttime(time_t t, int *flags, char *tmp, t_lsnode **root)
-{
-	if (*root == NULL)
-	{
-		*root = ls_createnode(tmp);
-		return ;
-	}
-	if ((*root)->stat->st_mtime > t)
-		ls_inserttime(t, flags, tmp, &((*root)->right));
-	else
-		ls_inserttime(t, flags, tmp, &((*root)->left));
-}
-
-void	ls_inserttime1(int *flags, char *tmp, t_lsnode **root)
-{
-	struct stat	buf;
-
-	stat(tmp, &buf);
-	ls_inserttime(buf.st_mtime, flags, tmp, root);
+	if (g_flags.ls_sortcmp(*root, insert) < 0)
+		ls_insertnode(&((*root)->right), insert);
+	else 
+		ls_insertnode(&((*root)->left), insert);
 }
 
 void	ls_freetree(t_lsnode *tmp)
@@ -62,5 +56,6 @@ void	ls_freetree(t_lsnode *tmp)
 		ls_freetree(tmp->left);
 	if (tmp->right)
 		ls_freetree(tmp->right);
+	free(tmp->full_path);
 	free(tmp);
 }
