@@ -6,7 +6,7 @@
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 18:44:51 by vilee             #+#    #+#             */
-/*   Updated: 2020/01/19 01:02:37 by vilee            ###   ########.fr       */
+/*   Updated: 2020/01/20 12:31:22 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void				ls_freetree(t_lsnode *tmp);
 */
 
 void				ft_ls(int *flags, char *av);
+void				ft_ls_start(int *flags, char *av);
 void				ft_lsbigr(int *flags, char *av);
 
 char				*build_path(char *s, char *old_path);

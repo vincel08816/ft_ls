@@ -6,13 +6,15 @@
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 19:41:10 by vilee             #+#    #+#             */
-/*   Updated: 2020/01/19 01:15:19 by vilee            ###   ########.fr       */
+/*   Updated: 2020/01/20 12:11:48 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-/*	tree functions */
+/*	
+**	tree functions
+*/
 
 t_lsnode	*ls_createnode(char *tmp, char *path)
 {

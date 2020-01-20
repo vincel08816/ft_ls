@@ -6,7 +6,7 @@
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 19:41:24 by vilee             #+#    #+#             */
-/*   Updated: 2020/01/19 01:39:05 by vilee            ###   ########.fr       */
+/*   Updated: 2020/01/20 12:32:53 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int			main(int ac, char **av)
 			ft_ls(flags, ".");
 		else
 			while (++arg < ac)
-				ft_ls(flags, av[arg]);
+				ft_ls_start(flags, av[arg]);
 	}
 	return (0);
 }
@@ -66,6 +66,27 @@ void		ft_lsbigr(int *flags, char *av)
 	}
 }
 
+void	ft_ls_start(int *flags, char *av)
+{
+	DIR				*dr;
+	struct stat		check;
+	char			*tmp;
+	t_lsnode		*one;
+
+	if ((dr = opendir(av)) != 0)
+	{
+		closedir(dr);
+		ft_ls(flags, av);
+	}
+	else if (lstat(tmp = build_path(av, "."), &check) != -1)
+	{
+		one = ls_createnode(av, ".");
+		g_flags.ls_printformat(one);
+		ls_freetree(one);
+		free(tmp);
+	}
+}
+
 void 	ft_ls(int *flags, char *av)
 {
 	struct dirent	*de;
@@ -87,7 +108,7 @@ void 	ft_ls(int *flags, char *av)
 		ls_freetree(root);
 		if (flags['R'])
 		{
-			printf("\n%s: \ntotal %d", tmp = build_path(0, av)54	);
+			printf("\n%s: \n", tmp = build_path(0, av));
 			ft_lsbigr(flags, av);
 			printf("\n\n");
 			free(tmp);

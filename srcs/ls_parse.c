@@ -6,13 +6,13 @@
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 18:47:16 by vilee             #+#    #+#             */
-/*   Updated: 2020/01/19 01:11:00 by vilee            ###   ########.fr       */
+/*   Updated: 2020/01/20 13:26:54 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static void	ls_flagzero(int *flags, char *options)
+static void	ls_flagzero(int *flags)
 {
 	flags['t'] = 0;
 	flags['r'] = 0;
@@ -42,7 +42,7 @@ int		ls_setflag(int ac, int *flags, char **av)
 	int		count;
 	int		arg;
 
-	ls_flagzero(flags, LS_FLAG_OPTIONS);
+	ls_flagzero(flags);
 	arg = 0;
 	while (++arg < ac && av[arg][0] == '-')
 	{
@@ -51,7 +51,7 @@ int		ls_setflag(int ac, int *flags, char **av)
 		count = 1;
 		while (av[arg][count] && ft_strchr(LS_FLAG_OPTIONS, av[arg][count]))
 		{
-			flags[av[arg][count]] = 1;
+			flags[(int)av[arg][count]] = 1;
 			count++;
 		}
 		if (av[arg][count] != 0)
@@ -68,10 +68,14 @@ int		ls_setflag(int ac, int *flags, char **av)
 void	ls_checkdir(int ac, int arg, char **av)
 {
 	DIR				*dr;
-
+	struct stat		check;
+	char			*tmp;
+	
 	while (++arg < ac)
 	{
 		if (!(dr = opendir(av[arg])))
-			printf("ls: %s: No such file or directory\n", av[arg]);
+			if (lstat(tmp = build_path(av[arg], "."), &check) == -1)
+				printf("ls: %s: No such file or directory\n", av[arg]);
+			free(tmp);
 	}
 }
