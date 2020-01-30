@@ -1,31 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/10 16:13:19 by vilee             #+#    #+#             */
-/*   Updated: 2020/01/29 16:50:36 by vilee            ###   ########.fr       */
+/*   Created: 2019/12/08 20:31:16 by vilee             #+#    #+#             */
+/*   Updated: 2020/01/29 16:52:44 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef ft_printf_H
+# define ft_printf_H
+
 #include "libft.h"
 
-int		ft_atoi(const char *str)
-{
-	int i;
-	int num;
-	int neg;
-
-	i = 0;
-	num = 0;
-	neg = 1;
-	while (str[i] && ft_isspace(str[i]))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-		(str[i++] == '-') ? (neg = -1) : 0;
-	while (str[i] >= '0' && str[i] <= '9')
-		num = num * 10 + str[i++] - '0';
-	return (num * neg);
-}
+#endif

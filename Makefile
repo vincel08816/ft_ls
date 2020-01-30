@@ -6,7 +6,7 @@
 #    By: vilee <vilee@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/01/19 12:00:04 by vilee             #+#    #+#              #
-#    Updated: 2020/01/20 13:06:11 by vilee            ###   ########.fr        #
+#    Updated: 2020/01/29 16:52:44 by vilee            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,8 +16,8 @@ DIRHDER = ./includes/
 DIRLIB = ./libft/
 DIRSRC = ./srcs/
 
-PRINTFSRCS = ./libft/ft_printf/includes/
-PRINTFLIB = ./libft/ft_printf/srcs/
+ft_printfSRCS = ./libft/ft_printf/includes/
+ft_printfLIB = ./libft/ft_printf/srcs/
 
 all: $(NAME)
 

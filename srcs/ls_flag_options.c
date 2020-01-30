@@ -6,7 +6,7 @@
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 18:19:20 by vilee             #+#    #+#             */
-/*   Updated: 2020/01/19 00:23:55 by vilee            ###   ########.fr       */
+/*   Updated: 2020/01/29 16:51:46 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 void	print_norm(t_lsnode *a)
 {
-	printf("%-25s", a->name);
+	ft_printf("%-25s", a->name);
 }
 
 /*	ls sort comparisions */
@@ -40,7 +40,7 @@ void	print_inorder(int *flags, t_lsnode *root)
 		print_inorder(flags, root->left);
 	if (root->name[0] != '.' || flags['a'])
 	{
-		g_flags.ls_printformat(root);
+		g_flags.ls_ft_printformat(root);
 	}
 	if (root->right)
 		print_inorder(flags, root->right);
@@ -54,7 +54,7 @@ void	print_reverse(int *flags, t_lsnode *root)
 		print_reverse(flags, root->right);
 	if (root->name[0] != '.' || flags['a'])
 	{
-		g_flags.ls_printformat(root);
+		g_flags.ls_ft_printformat(root);
 	}
 	if (root->left)
 		print_reverse(flags, root->left);

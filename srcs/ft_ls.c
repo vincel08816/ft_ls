@@ -6,7 +6,7 @@
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 19:41:24 by vilee             #+#    #+#             */
-/*   Updated: 2020/01/20 12:32:53 by vilee            ###   ########.fr       */
+/*   Updated: 2020/01/29 16:51:46 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ int			main(int ac, char **av)
 	if (ac >= 1)
 	{
 		arg = ls_setflag(ac, flags, av);
-		ls_checkdir(ac, arg - 1, av);
+		ls_checkdir(ac, arg - 1, av, flags);
 		arg--;
 		if (ac - 1 == arg)
 			ft_ls(flags, ".");
 		else
 			while (++arg < ac)
-				ft_ls_start(flags, av[arg]);
+				ft_ls(flags, av[arg]);
 	}
 	return (0);
 }
@@ -66,27 +66,6 @@ void		ft_lsbigr(int *flags, char *av)
 	}
 }
 
-void	ft_ls_start(int *flags, char *av)
-{
-	DIR				*dr;
-	struct stat		check;
-	char			*tmp;
-	t_lsnode		*one;
-
-	if ((dr = opendir(av)) != 0)
-	{
-		closedir(dr);
-		ft_ls(flags, av);
-	}
-	else if (lstat(tmp = build_path(av, "."), &check) != -1)
-	{
-		one = ls_createnode(av, ".");
-		g_flags.ls_printformat(one);
-		ls_freetree(one);
-		free(tmp);
-	}
-}
-
 void 	ft_ls(int *flags, char *av)
 {
 	struct dirent	*de;
@@ -108,9 +87,9 @@ void 	ft_ls(int *flags, char *av)
 		ls_freetree(root);
 		if (flags['R'])
 		{
-			printf("\n%s: \n", tmp = build_path(0, av));
+			ft_printf("\n%s: \n", tmp = build_path(0, av));
 			ft_lsbigr(flags, av);
-			printf("\n\n");
+			ft_printf("\n\n");
 			free(tmp);
 		}
 		closedir(dr);

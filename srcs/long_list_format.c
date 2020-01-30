@@ -6,7 +6,7 @@
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 18:24:53 by vilee             #+#    #+#             */
-/*   Updated: 2020/01/18 23:52:52 by vilee            ###   ########.fr       */
+/*   Updated: 2020/01/29 16:51:46 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,12 @@ void		print_long(t_lsnode *a)
 	ls_chmod(a, buff);
 	owner = getpwuid(a->stat.st_uid)->pw_name;
 	group = getgrgid(a->stat.st_gid)->gr_name;
-	printf("%.10s%3d %-9s %-6s", buff, a->stat.st_nlink, group, owner);
+	ft_printf("%.10s%3d %-9s %-6s", buff, a->stat.st_nlink, group, owner);
 	if (!S_ISBLK(a->stat.st_mode) && !S_ISCHR(a->stat.st_mode))
-		printf("%6lld ", a->stat.st_size);
+		ft_printf("%6lld ", a->stat.st_size);
 	else
-		printf("%4u, %4u", major(a->stat.st_rdev), minor(a->stat.st_rdev));
+		ft_printf("%4u, %4u", major(a->stat.st_rdev), minor(a->stat.st_rdev));
 	time = ft_strdup(ctime(&(a->stat.st_mtime)));
 	time[16] = '\0';
-	printf("%s %s\n", time + 4, a->name);
+	ft_printf("%s %s\n", time + 4, a->name);
 }

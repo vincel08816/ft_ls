@@ -6,7 +6,7 @@
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 18:44:51 by vilee             #+#    #+#             */
-/*   Updated: 2020/01/20 12:31:22 by vilee            ###   ########.fr       */
+/*   Updated: 2020/01/29 16:51:46 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef void		t_print_order(int *flags, t_lsnode *root);
 typedef struct		s_flagfns
 {
 	t_compare		*ls_sortcmp;
-	t_print_format	*ls_printformat;
+	t_print_format	*ls_ft_printformat;
 	t_print_order	*ls_traverse;
 }					t_flagfns;
 
@@ -57,7 +57,7 @@ t_flagfns	g_flags;
 */
 
 int					ls_setflag(int ac, int *flags, char **av);
-void				ls_checkdir(int ac, int arg, char **av);
+void				ls_checkdir(int ac, int arg, char **av, int *flags);
 
 /*
 **	ls_flag_options.c

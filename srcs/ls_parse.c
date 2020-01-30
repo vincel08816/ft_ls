@@ -6,7 +6,7 @@
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/18 18:47:16 by vilee             #+#    #+#             */
-/*   Updated: 2020/01/20 13:26:54 by vilee            ###   ########.fr       */
+/*   Updated: 2020/01/29 16:51:46 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ static void	ls_flagzero(int *flags)
 static void		ls_init_options(int *flags)
 {
 	if (flags['l'])
-		g_flags.ls_printformat = &print_long;
+		g_flags.ls_ft_printformat = &print_long;
 	else
-		g_flags.ls_printformat = &print_norm;
+		g_flags.ls_ft_printformat = &print_norm;
 	if (flags['r'])
 		g_flags.ls_traverse = &print_reverse;
 	else
@@ -56,7 +56,7 @@ int		ls_setflag(int ac, int *flags, char **av)
 		}
 		if (av[arg][count] != 0)
 		{
-			printf("%s%c\nusage: ls [%s] [file ...]\n", \
+			ft_printf("%s%c\nusage: ls [%s] [file ...]\n", \
 			"ls: illegal option -- ", av[arg][count], LS_FLAG_OPTIONS);
 			exit(1);
 		}
@@ -65,17 +65,31 @@ int		ls_setflag(int ac, int *flags, char **av)
 	return (arg);
 }
 
-void	ls_checkdir(int ac, int arg, char **av)
+void	ls_checkdir(int ac, int arg, char **av, int *flags)
 {
 	DIR				*dr;
 	struct stat		check;
-	char			*tmp;
+	char			*tmp[9999];
+	int				i;
+	t_lsnode		*root;
 	
+	i = 0;
+	root = NULL;
 	while (++arg < ac)
-	{
 		if (!(dr = opendir(av[arg])))
-			if (lstat(tmp = build_path(av[arg], "."), &check) == -1)
-				printf("ls: %s: No such file or directory\n", av[arg]);
-			free(tmp);
+			if (lstat(tmp[i++] = build_path(av[arg], "."), &check) == -1)
+				ft_printf("ls: %s: No such file or directory\n", av[arg]);
+	arg = 0;
+	while (++arg < ac)
+		if (lstat(tmp[i++] = build_path(av[arg], "."), &check) != -1)
+			ls_insertnode(&root, ls_createnode(av[arg], "."));
+	tmp[i] = NULL;
+	if (root)
+	{
+		g_flags.ls_traverse(flags, root);
+		ls_freetree(root);
+		i = 0;
+		while (tmp[i] != NULL)
+			free(tmp[i++]);
 	}
 }

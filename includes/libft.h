@@ -6,16 +6,19 @@
 /*   By: vilee <vilee@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/05 10:55:52 by vilee             #+#    #+#             */
-/*   Updated: 2019/12/08 20:38:00 by vilee            ###   ########.fr       */
+/*   Updated: 2020/01/29 16:52:44 by vilee            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
-# include <unistd.h>
+# include <stdio.h>
+# include <stdarg.h>
 # include <string.h>
 # include <stdlib.h>
+# include <unistd.h>
 # include <stdint.h>
+# include <float.h>
 # define __INT_MIN -2147483648
 # define __INT_MAX 2147483647
 
@@ -54,7 +57,6 @@ int					ft_isascii(int c);
 int					ft_isprint(int c);
 int					ft_toupper(int c);
 int					ft_tolower(int c);
-int					ft_isspace(int c);
 void				*ft_memalloc(size_t size);
 void				ft_memdel(void **ap);
 char				*ft_strnew(size_t size);
@@ -93,5 +95,125 @@ int					count_digits(int i);
 void				ft_swap(int *a, int *b);
 char				*char_remalloc(char *s, size_t n);
 char				*ft_combine(char *sum, char *append);
+int					ft_isspace(int ch);
+
+
+/*
+**	ft_printf
+*/
+
+typedef struct	s_width
+{
+	int			width;
+	int			dot;
+	int			after_dot;
+	int			mem_print;
+	int			str_print;
+	int			tot_print;
+	char		mem_s;
+}				t_width;
+
+typedef unsigned long long int	t_ulli;
+typedef long long int			t_lli;
+
+typedef struct	s_length
+{
+	int			if_signed;
+	long long	lltmp;
+	t_ulli		ulltmp;
+	void		*tmp_num;
+}				t_length;
+
+typedef struct	s_intparse
+{
+	int			pre_pad;
+	int			print_space;
+	int			print_zero;
+	int			pad;
+	int			if_hash;
+	int			len;
+}				t_intparse;
+
+typedef struct	s_floats
+{
+	int			ilen;
+	t_ulli		ipart;
+	int			neg;
+	char		*ret;
+	char		*ret_ptr;
+	float		f;
+	int			printdot;
+}				t_floats;
+
+typedef struct	s_var
+{
+	int			flags[127];
+	char		specifier;
+	t_width		wp[1];
+	t_length	bs[1];
+	char		length[5];
+	char		pre_mod[1000];
+	int			ret_len;
+	int			hex_upper;
+	int			base;
+	char		append[1000];
+	int			check_num;
+}				t_var;
+
+# define BUFF_SIZE 100000
+# define SPEC "%cspdDiuUboOxXfFeEgG"
+# define A_SYM "-+0 #'.123456789%cspdDiuUboOxXfFeEgGaAlhIL"
+# define PF_FLAG "-+0 #'"
+# define PF_LENF "lhL"
+# define HASH_FLAG "aAeEfFgG"
+
+typedef int		t_spec_funct(char *print, va_list ap, t_var *var);
+
+int				ft_printf(char const *arg, ...);
+int				ft_reg_str(char *print, const char **s);
+
+void			pf_parse(char const **s, t_var *var);
+char			*p_flg(char const *s, t_var *var);
+char			*p_wp(char const *s, t_var *var);
+char			*p_len(char const *s, t_var *var);
+
+int				pf_var(char *print, va_list ap, t_var *var);
+void			make_dpt(t_spec_funct *ref[127]);
+int				pf_spec_c(char *print, va_list ap, t_var *var);
+int				pf_spec_s(char *print, va_list ap, t_var *var);
+int				pf_diouxx(char *print, va_list ap, t_var *var);
+int				pf_spec_p(char *print, va_list ap, t_var *var);
+int				pf_spec_f(char *print, va_list ap, t_var *var);
+
+void			constructp(t_var *var);
+void			t_length_width(char *print, t_var *var, char *s);
+int				goin_fre(int ret, t_var **var);
+
+void			di_width(char *print, t_var *var);
+void			di_flags(char *print, t_var *var);
+
+char			*lltoa_base(void *num, t_var *var, int base);
+char			*ft_lltoa_base(void *num, t_var *var, int base);
+char			base_ret(int n, int upper);
+int				find_base(t_var *var);
+char			*ft_ftoa(float number, int prec);
+void			add_hash(t_var *var, char **print);
+
+char			*pf_intlen3(va_list ap, t_var *var);
+char			*pf_hhbase(va_list ap, t_var *var, int base);
+char			*pf_hbase(va_list ap, t_var *var, int base);
+char			*pf_uhhbase(va_list ap, t_var *var, int base);
+char			*pf_uhbase(va_list ap, t_var *var, int base);
+char			*pf_lbase(va_list ap, t_var *var, int base);
+char			*pf_ulbase(va_list ap, t_var *var, int base);
+char			*pf_llbase(va_list ap, t_var *var, int base);
+char			*pf_ullbase(va_list ap, t_var *var, int base);
+char			*pf_ibase(va_list ap, t_var *var, int base);
+
+char			*pf_uibase(va_list ap, t_var *var, int base);
+void			pf_int2s(char *print, t_var *v);
+void			pf_iiappend(char *print, t_var *v, t_intparse *t);
+void			pf_intcats(char *print, t_var *v, char *ptr);
+void			pf_iiappend2(char *print, t_var *v, t_intparse *t, char *p);
 
 #endif
